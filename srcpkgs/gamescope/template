@@ -1,0 +1,31 @@
+# Template file for 'gamescope'
+pkgname=gamescope
+version=3.11.48.1
+revision=1
+_libliftoff_version="0.3.0"
+#_wlroots_version="0.15.1"
+build_wrksrc="gamescope-${version}"
+build_style=meson
+configure_args="--buildtype=release -Db_ndebug=false -Dforce_fallback_for=stb,libliftoff"
+hostmakedepends="pkg-config wayland-devel"
+makedepends="glslang-devel libcap-devel libinput-devel libseat-devel libXcomposite-devel libXdamage-devel libxkbcommon-devel libXxf86vm-devel SDL2-devel wayland-protocols wlroots0.15-devel xorg-server-devel xorg-server-xwayland"
+short_desc="SteamOS session compositing window manager"
+maintainer="Orphaned <orphan@voidlinux.org>"
+license="BSD-2-Clause"
+homepage="https://github.com/Plagman/gamescope"
+distfiles="https://github.com/Plagman/gamescope/archive/refs/tags/${version}.tar.gz
+	https://github.com/nothings/stb/archive/refs/heads/master.tar.gz
+	https://gitlab.freedesktop.org/emersion/libliftoff/-/releases/v${_libliftoff_version}/downloads/libliftoff-${_libliftoff_version}.tar.gz"
+checksum="2d50a22cc35fc264e95907e4eeeaab73c490f216ae9e6172080b2dc5b3cb2d44
+	a23cf78f6306957e417b7e0aa81bde62666708e45cc6e512960913bdee9c0eb4
+	5e6afe189e47d3af3617fc82e3a21db18d756bd44c20b5a942a1d50b814159b4"
+
+post_extract() {
+	cp -R stb-master "gamescope-${version}"/subprojects/stb
+	cp -R "libliftoff-${_libliftoff_version}"/* "gamescope-${version}"/subprojects/libliftoff
+	cp "gamescope-${version}"/subprojects/packagefiles/stb/meson.build "gamescope-${version}"/subprojects/stb
+}
+
+post_install() {
+	vlicense LICENSE
+}
